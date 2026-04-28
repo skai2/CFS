@@ -1,0 +1,4 @@
+surya-ocr
+torch
+pillow
+requests

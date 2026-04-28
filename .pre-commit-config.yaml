@@ -1,0 +1,70 @@
+repos:
+  # -- General hygiene --
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+
+  # -- Secrets detection --
+  # detect-secrets — incumbent. Kept for the .secrets.baseline allowlist
+  # workflow. Detection breadth has been overtaken; gitleaks below carries
+  # the primary load.
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+
+  # gitleaks — primary secrets engine. Broader detector set, composite
+  # rules for proximity-keyed PII identifiers (used later for BR/IT/JP
+  # region coverage). Fully offline, MIT-licensed.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # -- PII detection (structured patterns) --
+  - repo: local
+    hooks:
+      - id: check-pii
+        name: Check for PII patterns
+        entry: python3 dev/check_pii.py
+        language: system
+        types: [text]
+        exclude: '\.svg$'
+
+  # -- PII reminder (manual review) --
+  # Structured PII checker only catches patterns. Contextual PII — real
+  # names, region-specific company names, geographic indicators, account
+  # paths — must be caught by reading the diff. This hook prints a
+  # reminder to do so on every commit.
+  - repo: local
+    hooks:
+      - id: pii-reminder
+        name: PII reminder (manual review needed)
+        entry: bash dev/pii_reminder.sh
+        language: system
+        always_run: true
+        pass_filenames: false
+        verbose: true
+
+  # -- Python linting/formatting --
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.11
+    hooks:
+      - id: ruff
+        args: ['--fix']
+      - id: ruff-format
+
+  # -- Commit message convention --
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.0.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'ci']

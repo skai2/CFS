@@ -1,0 +1,27 @@
+# Backups and history
+bak/
+
+# Personal configuration (all config.yaml blocked, test mock whitelisted)
+config.yaml
+!tests/_mock/config.yaml
+
+# Local PII wordlist — never commit (contains real names, machine ids, etc.)
+dev/pii_wordlist.local.txt
+
+# Credentials and tokens
+credentials*.json
+token*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+
+# Local exports and data dumps
+exports/
+
+# Agent harness runtime state
+.claude/

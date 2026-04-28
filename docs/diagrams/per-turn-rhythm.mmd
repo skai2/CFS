@@ -1,0 +1,9 @@
+graph LR
+    start([Turn begins]) --> recall
+    recall -.->|fact miss| find
+    find --> work
+    recall --> work[work / actions]
+    work -.->|item to save| file
+    file --> encode
+    work --> encode
+    encode --> finish([Turn ends])

@@ -1,0 +1,187 @@
+# =============================================================================
+# CFS Configuration
+# =============================================================================
+#
+# Copy this file to config.yaml and fill in your values:
+#
+#   cp config.example.yaml config.yaml
+#
+# Every address uses the uniform `<backend>:<path>` grammar — see
+# refs/admin/addressing.md for the full specification. There is no bare-path
+# form; every address carries an explicit backend declared in `backends:`.
+# Local paths root at $HOME on the matched machine.
+#
+# A single config.yaml is portable across machines and cloud environments.
+# Each environment activates whichever backends match its signals and
+# capabilities; addresses with non-active backends remain valid typed
+# references but are inert in that session.
+
+# -----------------------------------------------------------------------------
+# Language
+# -----------------------------------------------------------------------------
+# Default language for structural folder names (Archive, Finance, Audio, etc.)
+# Item filenames always use the document's own language regardless of this.
+# See refs/storage/naming.md for details.
+
+language: en
+
+# -----------------------------------------------------------------------------
+# Backends
+# -----------------------------------------------------------------------------
+# Declare every backend referenced by addresses below. The name on the
+# left-hand side is user-chosen, lowercase and identifier-safe, and becomes
+# the scheme prefix for addresses (the name `gdrive` below makes
+# `gdrive:System/Archive` a valid address).
+#
+# Two classes of backend:
+#
+# - Local (`type: local`)  — a filesystem on a specific machine. Carries a
+#                            `match:` block of identifying signals; the agent
+#                            considers the backend active when all listed
+#                            fields agree. At most one local backend may be
+#                            active per session.
+#
+# - Remote (`type: gdrive`, etc.) — a service the agent reaches via API/MCP/CLI.
+#                            Active wherever the agent has the capability.
+#                            May declare a `mirrors:` map of per-machine sync
+#                            paths used for reads only — mutations always go
+#                            through the backend's API
+#                            (see refs/admin/safety.md § Backend dispatch).
+#
+# Recognized `match:` fields: hostname, local_hostname, computer_name,
+# env: { <var>: <value> }. The set is extensible — see refs/admin/addressing.md.
+#
+# Example:
+#   backends:
+#     laptop_a:
+#       type: local
+#       match:
+#         hostname: LAPTOP-A.local       # `hostname` / `uname -n`
+#         local_hostname: LAPTOP-A       # `scutil --get LocalHostName` (macOS)
+#     gdrive:
+#       type: gdrive
+#       account: you@example.com  # pii:allow
+#       mirrors:
+#         laptop_a: ~/Library/CloudStorage/GoogleDrive-you@example.com/My Drive  # pii:allow
+
+backends:
+
+# -----------------------------------------------------------------------------
+# Admin
+# -----------------------------------------------------------------------------
+# System state — operational logs and actionable todos.
+# See refs/admin/logging.md for format and conventions.
+#
+# Examples:
+#   admin: gdrive:System/Admin
+#   admin: laptop_a:Cloud/CFS/Admin
+
+admin:
+
+# -----------------------------------------------------------------------------
+# Storage layer
+# -----------------------------------------------------------------------------
+# Three storage classes plus an unsorted inbox, each with a configurable
+# address. Typical setups:
+#
+#   - All on a single backend: point everything at one location
+#   - Hybrid: cloud for Archive/Library, local for Projects (git/venv needs)
+#
+# Unsorted is CFS's managed inbox — items placed here await processing.
+# After filing, items are removed from unsorted (it's CFS-managed, not an
+# external source). Everything else external is pointed at directly via flows.
+#
+# Examples:
+#   archive: gdrive:System/Archive
+#   library: gdrive:System/Library
+#   projects: gdrive:System/Projects
+#   unsorted: gdrive:System/Unsorted
+
+storage:
+  active: true
+  archive:
+  library:
+  projects:
+  unsorted:
+
+# -----------------------------------------------------------------------------
+# Additional locations (optional)
+# -----------------------------------------------------------------------------
+# Named alternative locations for storage classes. Use when a class needs
+# items in multiple physical locations (e.g., projects that must be local
+# for git/venv, vs projects on cloud storage).
+#
+# Sources ({admin}/storage/sources.md) direct items to specific locations.
+# If no source directive applies, the default address from `storage` is used.
+#
+# Two forms — pick based on whether the location varies by machine:
+#
+# Single-address form (uniform across all machines where the backend is active):
+#   locations:
+#     cache:
+#       class: library
+#       address: gdrive:Cache
+#
+# Mirrors form (per-machine map, keyed by local backend name; resolves via the
+# entry whose key matches the active local backend, otherwise inert):
+#   locations:
+#     projects-local:
+#       class: projects
+#       mirrors:
+#         laptop_a: laptop_a:Repos
+#         laptop_b: laptop_b:Code
+
+# locations:
+
+# -----------------------------------------------------------------------------
+# Knowledge layer
+# -----------------------------------------------------------------------------
+# Obsidian vault for linked knowledge nodes. Independent of the storage
+# layer. Set active: true when ready to use. See docs/spec.md Part II.
+#
+# Examples:
+#   memory: gdrive:System/Memory
+#   memory: laptop_a:Cloud/CFS/Memory
+
+knowledge:
+  active: false
+  memory:
+
+# -----------------------------------------------------------------------------
+# External sources (optional)
+# -----------------------------------------------------------------------------
+# Read-only locations and services CFS may pull from — used by the file flow
+# (consume items into storage) and the encode flow (capture content into
+# knowledge). External sources are never mutated by CFS; the source-protection
+# rule in refs/admin/safety.md applies.
+#
+# Each entry is a name and an address. Names are user-chosen, lowercase-
+# hyphenated (system-internal handles, like backend names). Addresses use the
+# same scheme syntax as elsewhere — `<backend>:<path>` for filesystem
+# locations, or service-specific schemes:
+#
+#   - `<backend>:<path>`              — filesystem capability per `backends:`
+#   - `email:[<account>]`             — email capability (MCP / IMAP / native)
+#   - `calendar:[<calendar-id>]`      — calendar capability (CalDAV / MCP)
+#   - `<app>:<id>`                    — service-specific MCP or API
+#                                       (notion, slack, figma, etc.)
+#
+# Schemes are user/community-extensible; CFS does not enumerate exhaustively.
+# If the agent has no capability for a source's scheme, it surfaces the
+# reference and continues — sources fail gracefully.
+#
+# Sources may also be referenced ad-hoc (e.g., "process laptop_a:Downloads");
+# defining them here is for repeated, named use. Source-specific
+# interpretation rules (e.g., "from Corp Bank, INV- prefix means business
+# expense") live separately at `{admin}/storage/sources.md` and may
+# reference defined sources by name.
+#
+# Example:
+#   sources:
+#     downloads: laptop_a:Downloads
+#     phone-photos: gdrive:Camera Uploads
+#     work-email: email:you@work.example  # pii:allow
+#     personal-calendar: calendar:
+#     team-slack: slack:my-team
+
+# sources:

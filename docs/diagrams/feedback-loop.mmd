@@ -1,0 +1,7 @@
+graph LR
+    perTurn[per-turn ops<br/>file · encode · etc.] -->|defer uncertainty| todos[(todos)]
+    todos --> maintenance[keep · reflect]
+    maintenance -->|suggest| review([User review])
+    review -->|formalize| configuration[rule · direct]
+    configuration --> admin[(admin policy)]
+    admin -.->|consulted by future| perTurn

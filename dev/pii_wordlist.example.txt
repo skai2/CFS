@@ -1,0 +1,73 @@
+# CFS PII wordlist — TEMPLATE
+#
+# Copy this file to dev/pii_wordlist.local.txt and populate with your
+# own identifiers. The .local file is gitignored — its contents stay
+# entirely on your machine. The check_pii.py pre-commit hook reads it
+# and flags any case-insensitive whole-word match in staged files.
+#
+# Format
+# ------
+# - One entry per line.
+# - Lines starting with `#` are comments; blank lines are ignored.
+# - Each entry is matched as a case-insensitive whole-word regex
+#   (`\bENTRY\b`, `re.IGNORECASE`). Multi-word entries match across
+#   spaces. Short tokens (e.g., 2-3 letters) may be noisy — be
+#   selective.
+# - To suppress a flagged line in a committed file, add `# pii:allow`
+#   to the end of that line.
+#
+# What to put here (illustrative — none of these are real)
+# --------------------------------------------------------
+#
+# === Real names ===
+# Your name and any family / close-colleague names whose presence
+# in a commit would identify you specifically.
+#
+#   Example:
+#   John Doe
+#   Jane Smith
+#
+# === Real organization names ===
+# Your employer, clients, family businesses — names that should not
+# appear unredacted in public-facing examples.
+#
+#   Example:
+#   Acme Corp
+#   Initech
+#
+# === Real machine / device / handle identifiers ===
+# Your hostnames, online handles, account names that surface in
+# config dumps and logs.
+#
+#   Example:
+#   laptop-a.local
+#   myhandle
+#   you@personal.example
+#
+# === Real path components ===
+# Entity-named directories that show up in storage examples and
+# would tie a path to your identity.
+#
+#   Example:
+#   ~/Cloud/Acme/
+#   Archive/JohnDoe/
+#
+# === Region-fingerprint vocabulary ===
+# Terms unique to your country/region. Individually low-signal, but
+# in aggregate they identify the local context (and slipped through
+# multiple manual reviews historically).
+#
+#   Example for Brazil:
+#   CPF
+#   CNPJ
+#   CNH
+#   MEI
+#   Declaração de Bens
+#
+#   Example for Italy:
+#   Codice Fiscale
+#   Partita IVA
+#
+#   Example for Japan:
+#   マイナンバー
+#   個人番号

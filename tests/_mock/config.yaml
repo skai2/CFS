@@ -1,0 +1,25 @@
+# Mock CFS Configuration for testing.
+# Loaded by the test runner; not used by the runtime skill on real machines.
+# The `mock` backend uses an empty match (always active in this config) and
+# roots at the fixture's `system/` directory — see refs/admin/addressing.md.
+
+language: en
+
+backends:
+  mock:
+    type: local
+    match: {}
+    root: system
+
+storage:
+  active: true
+  archive: mock:Archive
+  library: mock:Library
+  projects: mock:Projects
+  unsorted: mock:Unsorted
+
+knowledge:
+  active: true
+  memory: mock:Memory
+
+admin: mock:Admin
