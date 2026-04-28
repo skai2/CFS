@@ -73,21 +73,37 @@ Memory/
 └── Procedural/                  how-tos, processes, templates
 ```
 
-CFS operations break into three modes — a default per-turn rhythm that runs silently around normal AI use, periodic maintenance for storage and knowledge health, and user-led configuration that captures policies for future operations. Each operation maps 1:1 to a flow file at `flows/<layer>/<operation>.md`. The modes below describe typical invocation patterns; any operation can also be requested directly by the user at any time.
+**Flows.** Each layer exposes a small set of operations, mapped 1:1 to flow files at `flows/<layer>/<operation>.md`:
+
+| Operation | Layer | What it does |
+|---|---|---|
+| `recall` | Knowledge | Look up relevant context from prior nodes before responding |
+| `encode` | Knowledge | Capture facts, decisions, and events into knowledge nodes |
+| `reflect` | Knowledge | Consolidate the knowledge graph — duplicates, gaps, weak links |
+| `direct` | Knowledge | Persist a user directive about what knowledge should track |
+| `file` | Storage | Route, name, and place an item into storage |
+| `find` | Storage | Retrieve filed items by browsing or query |
+| `keep` | Storage | Maintain storage health — drift, unsorted, deferred todos |
+| `rule` | Storage | Persist a user-stated routing or naming preference |
+| `setup` | Admin | Initialize or verify the environment |
+| `test` | Admin | Validate flows against test cases |
+| `update` | Admin | Update the CFS clone from upstream |
+
+CFS operations break into three modes — a default per-turn rhythm that runs silently around normal AI use, periodic maintenance for storage and knowledge health, and user-led configuration that captures policies for future operations. The modes below describe typical invocation patterns; any operation can also be requested directly by the user at any time.
 
 **Per-turn rhythm.** The agent silently *recalls* relevant context, performs the *work* (which may dispatch explicit operations like `file`), and silently *encodes* anything worth remembering. Two cross-layer chains support this — a fact-like recall miss falls back to `find` in storage, and `file` chains into `encode` so storage activity leaves a knowledge trace.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/per-turn-rhythm-dark.svg">
-  <img alt="Per-turn rhythm: silent recall → work → encode, with cross-layer chains to find and file" src="docs/diagrams/per-turn-rhythm.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/per-turn-rhythm-dark.png">
+  <img alt="Per-turn rhythm: silent recall → work → encode, with cross-layer chains to find and file" src="docs/diagrams/per-turn-rhythm.png" width="100%">
 </picture>
 
 **Maintenance.** Manually invoked or scheduled, `keep` and `reflect` keep each layer healthy — `keep` reviews drift, processes Unsorted, and triages deferred todos; `reflect` consolidates duplicates, detects gaps, and strengthens connections in the knowledge graph.
 
 <p align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/maintenance-dark.svg">
-  <img alt="Maintenance flows: keep handles storage hygiene, reflect handles knowledge consolidation" src="docs/diagrams/maintenance.svg" width="65%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/maintenance-dark.png">
+  <img alt="Maintenance flows: keep handles storage hygiene, reflect handles knowledge consolidation" src="docs/diagrams/maintenance.png" width="65%">
 </picture>
 </p>
 
@@ -95,16 +111,16 @@ CFS operations break into three modes — a default per-turn rhythm that runs si
 
 <p align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/configuration-dark.svg">
-  <img alt="User-led configuration: rule writes to storage admin, direct writes to knowledge admin" src="docs/diagrams/configuration.svg" width="65%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/configuration-dark.png">
+  <img alt="User-led configuration: rule writes to storage admin, direct writes to knowledge admin" src="docs/diagrams/configuration.png" width="65%">
 </picture>
 </p>
 
 **Feedback loop.** The three modes feed each other. Regular operations defer uncertain decisions as todos; maintenance triages those todos and may surface rule or directive suggestions; accepted suggestions become configuration that shapes future regular operations.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/feedback-loop-dark.svg">
-  <img alt="Feedback loop: ops produce todos, maintenance suggests rules/directives, configuration shapes future ops" src="docs/diagrams/feedback-loop.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/feedback-loop-dark.png">
+  <img alt="Feedback loop: ops produce todos, maintenance suggests rules/directives, configuration shapes future ops" src="docs/diagrams/feedback-loop.png" width="100%">
 </picture>
 
 The entire system is readable by anyone — human or AI — in minutes. There is no hidden logic. The skill definition (`SKILL.md`) dispatches to flows, flows reference refs, refs define the rules.
