@@ -4,6 +4,8 @@ Optional CFS-bundled reference implementation for Google Drive operations. A POS
 
 Use when your environment has no native Drive support, no MCP, and no installed CLI for Google Drive.
 
+Scope is Drive only. For other Google Workspace surfaces (Gmail, Calendar, Sheets, Docs, Chat), prefer [`gws`](https://github.com/googleworkspace/cli) over building parallel tools here — this one stays focused on the POSIX-style Drive semantics and `sync-diff` recovery that the `gdrive:` backend relies on.
+
 ## When to use
 
 - **Cloud storage operations** — any mutation on Google Drive. Server-side by default; changes stream down rather than syncing up.
