@@ -85,6 +85,7 @@ Out-of-band — not part of the per-turn rhythm.
 | **setup** | First-time environment setup or verification — phrases like *"set up CFS"*, *"verify the environment"* | `flows/admin/setup.md` |
 | **test** | Validate CFS flows and routing against test cases — phrases like *"run the tests"* | `flows/admin/test.md` |
 | **update** | Update this CFS project clone from upstream — phrases like *"update CFS"*, *"pull latest CFS changes"*, *"check what's new before updating"* | `flows/admin/update.md` |
+| **todo** | Explicit todo lifecycle outside another running flow — phrases like *"create a todo"*, *"add a follow-up"*, *"close that todo"*, *"cancel todo X"*, *"update the todo about Y"* | `flows/admin/todo.md` |
 
 ## Default behavior
 

@@ -94,6 +94,8 @@ Logs and todos handle sensitive personal data. They must not become a shadow kno
 
 Separate from logs. Todos are actionable items that need attention — flagged for review, triage, redo, or user feedback.
 
+This document specifies todo *format* (filename, fields, sensitivity rules). For the *procedure* to create, update, close, or cancel a todo outside another running flow, see `flows/admin/todo.md`.
+
 ### Filename
 
 ```
