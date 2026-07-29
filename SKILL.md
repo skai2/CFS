@@ -11,6 +11,8 @@ The agent's persistent context across sessions — personal memory and file syst
 
 The meta-flow that orchestrates memory and file operations across the user's life. The agent dispatches to a specific operation when its trigger matches; otherwise runs the default per-turn rhythm. Storage and knowledge layers each carry distinct operations; admin operations are out-of-band.
 
+CFS is the agent's primary memory. Harnesses with internal memory systems need no special handling — CFS operates as the primary core memory alongside them; no coupling, mirroring, or migration is required.
+
 ## Prerequisites
 
 - Read `config.yaml` for active layers (`storage.active`, `knowledge.active`) and addresses. If `config.yaml` does not exist or the environment is not set up, follow `flows/admin/setup.md`.

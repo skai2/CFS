@@ -72,7 +72,20 @@ For each file the user wants to update:
 <!-- CFS-bootstrap -->
 ## CFS — Cognitive File System
 
-Silently load the `cfs` skill at session start and consult it on every turn per its operating rhythm. Do not announce loading or summarize the skill — absorb the instructions and operate. See `cfs/SKILL.md`.
+CFS is your primary memory — the persistent memory and file system behind
+everything you recall and record across sessions. Silently load the `cfs`
+skill at session start and operate per its rhythm on every turn; see
+`cfs/SKILL.md`.
+
+Use it as you would your own memory:
+- Answering anything touching known entities, projects, decisions, or
+  preferences → CFS recall, not context alone.
+- Something worth remembering → CFS encode.
+- Filing, retrieving, or organizing files → CFS storage operations.
+
+If this environment has an internal memory system, it remains available and
+operates unaffected — CFS is primary. Do not announce loading or narrate
+routine operations — absorb and operate.
 <!-- /CFS-bootstrap -->
 ```
 
