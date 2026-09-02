@@ -46,6 +46,8 @@ from pathlib import Path
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+from google.auth.exceptions import RefreshError
+from datetime import date
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -96,26 +98,39 @@ DEFAULT_EXPORT_FORMAT = {".gdoc": "md", ".gsheet": "xlsx", ".gslides": "pptx"}
 def authenticate():
     """Authenticate with Google Drive API. Returns service object."""
     creds = None
+    changed = False
 
     if TOKEN_PATH.exists():
         creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
+    if creds and not creds.valid and creds.expired and creds.refresh_token:
+        try:
             creds.refresh(Request())
-        else:
-            if not CREDENTIALS_PATH.exists():
-                print(
-                    f"Error: OAuth credentials not found at {CREDENTIALS_PATH}\n"
-                    f"Download from Google Cloud Console → APIs & Services → Credentials",
-                    file=sys.stderr,
-                )
-                sys.exit(1)
-            flow = InstalledAppFlow.from_client_secrets_file(
-                str(CREDENTIALS_PATH), SCOPES
+            changed = True
+        except RefreshError as e:
+            # Refresh token revoked/expired (invalid_grant): fall through to a fresh
+            # consent instead of crashing. Keep the dead token aside for forensics.
+            dead = TOKEN_PATH.with_name(f"token.json.dead-{date.today().isoformat()}")
+            TOKEN_PATH.replace(dead)
+            print(
+                f"Warning: token refresh failed ({e}); moved to {dead.name}; re-consenting",
+                file=sys.stderr,
             )
-            creds = flow.run_local_server(port=0)
+            creds = None
 
+    if not creds or not creds.valid:
+        if not CREDENTIALS_PATH.exists():
+            print(
+                f"Error: OAuth credentials not found at {CREDENTIALS_PATH}\n"
+                f"Download from Google Cloud Console → APIs & Services → Credentials",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        flow = InstalledAppFlow.from_client_secrets_file(str(CREDENTIALS_PATH), SCOPES)
+        creds = flow.run_local_server(port=0)
+        changed = True
+
+    if changed:
         TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
         TOKEN_PATH.write_text(creds.to_json())
 
