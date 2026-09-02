@@ -150,7 +150,7 @@ CFS works with any AI agent harness and LLM backend that supports the [Agent Ski
 **1. Clone into your agent's skills directory:**
 
 ```bash
-git clone https://github.com/skai2/CFS.git
+git clone https://github.com/skye-cp/cfs.git
 ```
 
 Place the repo where your agent discovers skills. Ideally this should be a location that ensures the skill is loaded across all sessions, so the AI always has access to it — for Claude Code, this is typically a configured skills path. If you only want CFS available in a specific project, place it there instead.
