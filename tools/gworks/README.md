@@ -83,4 +83,4 @@ Date-times without an offset are interpreted in the target calendar's time zone;
 
 ## Output and errors
 
-Every command prints JSON to stdout. Errors go to stderr with exit code 1 (`Error: 404 Not Found`). A revoked or expired token is moved aside as `token.json.dead-<date>` and a fresh consent is opened in the browser.
+Every command prints JSON to stdout. Errors go to stderr with exit code 1 (`Error: 404 Not Found`). A revoked or expired token is moved aside as `token.json.dead-<date>` and a fresh consent is opened in the browser. With `GWORKS_NO_BROWSER=1` set, no browser is opened: the command exits with code 2 and `Error: consent required for identity '<account>'; run: gworks -a <account> auth`, for callers that run unattended.

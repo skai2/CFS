@@ -38,6 +38,7 @@ Requires: google-api-python-client, google-auth, google-auth-oauthlib
 import argparse
 import base64
 import json
+import os
 import sys
 from datetime import date, datetime, timedelta, timezone
 from email.message import EmailMessage
@@ -101,6 +102,12 @@ def authenticate(account: str) -> Credentials:
     if not creds or not creds.valid:
         if not credentials_path.exists():
             fail(f"OAuth credentials not found at {credentials_path}")
+        if os.environ.get("GWORKS_NO_BROWSER"):
+            fail(
+                f"consent required for identity '{account}'; "
+                f"run: gworks -a {account} auth",
+                code=2,
+            )
         flow = InstalledAppFlow.from_client_secrets_file(str(credentials_path), SCOPES)
         creds = flow.run_local_server(port=0)
         changed = True
