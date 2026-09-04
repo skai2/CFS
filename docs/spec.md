@@ -463,6 +463,8 @@ The storage and knowledge layers are independently activatable via `config.yaml`
 
 **Transition: enabling knowledge after storage-only use.** When the knowledge layer is activated after items have been filed without encoding, the system will have filed items with no corresponding knowledge nodes. This is expected — the `encode` flow can be run against existing filed items to create nodes retroactively. A full backfill is not required; nodes can be created on-demand as items are retrieved or reviewed.
 
+**Private sessions.** Independent of the layer flags, a session the harness or the user marks as incognito, ephemeral, or not to be persisted keeps CFS dormant — no recall, encode, filing, logs, or todos — unless the user explicitly opts in within that session. See `refs/admin/safety.md` § Private sessions.
+
 ## Configurable locations
 
 Each storage class has a default address in `config.yaml`. For classes where items have different physical requirements — such as projects that need local storage for git repos alongside projects that can live on cloud storage — additional named locations can be configured.

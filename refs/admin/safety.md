@@ -48,6 +48,15 @@ When consent is not obtainable, record all three fields in the todo so a future 
 - **Minimize sensitive data in logs and todos.** Record decisions and paths, not document contents. See `refs/admin/logging.md` sensitivity section.
 - **Targets and sources are user-only artifacts.** Agents may suggest targets via todos but must not write them directly.
 
+## Private sessions
+
+A private session is any session the harness or the user marks as incognito, ephemeral, or not to be persisted. CFS follows the same posture as the harness's own memory: dormant by default.
+
+- Do not load or operate CFS in a private session unless the user explicitly asks for it within that session. No recall, no encode, no filing, no logs, no todos — every flow leaves a trace.
+- Opt-in is per session and applies from the moment it is given. Nothing said before it is encoded unless the user says so.
+- Never encode content from a private session afterwards, from another session, or from a transcript.
+- Do not infer privacy from content. Only an explicit harness signal or user cue ("off the record", "don't remember this") sets it.
+
 ## Backend dispatch
 
 Address grammar and backend declarations are defined in `refs/admin/addressing.md`. Operating on a remote backend requires a capability that speaks its API; choice of capability is covered in `SKILL.md` § Prerequisites. The two invariants below are mandatory for any remote backend:

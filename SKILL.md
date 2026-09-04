@@ -15,6 +15,7 @@ CFS is the agent's primary memory. Harnesses with internal memory systems need n
 
 ## Prerequisites
 
+- Check the session mode first. In a private session (incognito, ephemeral, no-persistence) CFS stays dormant unless the user explicitly opts in within that session; see `refs/admin/safety.md` § Private sessions.
 - Read `config.yaml` for active layers (`storage.active`, `knowledge.active`) and addresses. If `config.yaml` does not exist or the environment is not set up, follow `flows/admin/setup.md`.
 - See `refs/admin/safety.md` for operational rules — backend dispatch invariants, user consent, source protection, sensitive data handling.
 - See `refs/admin/addressing.md` for the `<backend>:<path>` grammar used in `config.yaml`, admin files, and knowledge nodes.
@@ -94,6 +95,8 @@ Out-of-band — not part of the per-turn rhythm.
 When the user's turn does not match a specific operation trigger, run the per-turn rhythm.
 
 ### Step 1: Engage check
+
+A private session skips the rhythm entirely until the user opts in (see Prerequisites).
 
 Skip the rhythm entirely for trivial standalone exchanges with no user context — greeting, generic factual lookup, isolated code question, math question. If the user mentions any specific entity, project, decision, file, preference, or asks about themselves directly — not trivial.
 

@@ -86,6 +86,9 @@ Use it as you would your own memory:
 If this environment has an internal memory system, it remains available and
 operates unaffected — CFS is primary. Do not announce loading or narrate
 routine operations — absorb and operate.
+
+In a private, incognito, or ephemeral session, do not load CFS and leave
+no trace unless the user explicitly asks for it in that session.
 <!-- /CFS-bootstrap -->
 ```
 
